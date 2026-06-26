@@ -41,6 +41,13 @@ APPS = {
         "icon": "🎧☎️",
         "color": "#38bdf8",
     },
+    "app4": {
+        "file": "app4.py",
+        "title": "Salary Intelligence",
+        "desc": "Fizetések, trendek és bérelemzések.",
+        "icon": "💼💰",
+        "color": "#f59e0b",
+    },
 }
 
 
@@ -70,24 +77,24 @@ def render_landing():
         .tile-card {
             background: rgba(255,255,255,0.04);
             border: 1px solid rgba(148,163,184,0.25);
-            border-radius: 22px;
-            padding: 28px 24px 18px 24px;
+            border-radius: 18px;
+            padding: 16px 18px 12px 18px;
             text-align: center;
-            box-shadow: 0 18px 45px rgba(0,0,0,0.35);
-            min-height: 210px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+            min-height: 130px;
         }
-        .tile-icon { font-size: 56px; }
+        .tile-icon { font-size: 38px; }
         .tile-name {
             color: #f1f5f9;
-            font-size: 23px;
+            font-size: 19px;
             font-weight: 800;
-            margin-top: 10px;
+            margin-top: 6px;
         }
         .tile-desc {
             color: #cbd5e1;
-            font-size: 15px;
-            margin-top: 8px;
-            min-height: 48px;
+            font-size: 13px;
+            margin-top: 5px;
+            min-height: 34px;
         }
         div[data-testid="stButton"] > button {
             width: 100%;
@@ -114,22 +121,27 @@ def render_landing():
         unsafe_allow_html=True,
     )
 
-    cols = st.columns(len(APPS), gap="large")
-    for col, (key, meta) in zip(cols, APPS.items()):
-        with col:
-            st.markdown(
-                f"""
-                <div class="tile-card">
-                    <div class="tile-icon">{meta['icon']}</div>
-                    <div class="tile-name">{meta['title']}</div>
-                    <div class="tile-desc">{meta['desc']}</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
-            if st.button(f"Megnyitás · {key}", key=f"open_{key}", use_container_width=True):
-                st.query_params["app"] = key
-                st.rerun()
+    # Csempék 2 oszlopos (2x2) elrendezésben
+    items = list(APPS.items())
+    cols_per_row = 2
+    for row_start in range(0, len(items), cols_per_row):
+        row_items = items[row_start:row_start + cols_per_row]
+        cols = st.columns(cols_per_row, gap="large")
+        for col, (key, meta) in zip(cols, row_items):
+            with col:
+                st.markdown(
+                    f"""
+                    <div class="tile-card">
+                        <div class="tile-icon">{meta['icon']}</div>
+                        <div class="tile-name">{meta['title']}</div>
+                        <div class="tile-desc">{meta['desc']}</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+                if st.button(f"Megnyitás · {key}", key=f"open_{key}", use_container_width=True):
+                    st.query_params["app"] = key
+                    st.rerun()
 
 
 # ------------------------------------------------------------
